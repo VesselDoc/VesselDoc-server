@@ -27,6 +27,11 @@ public class DAOUser {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}*/
+
+	public long getId() {
+		return id;
+	}
+
 	public String getUsername() {
 		return username;
 	}

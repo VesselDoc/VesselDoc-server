@@ -1,11 +1,11 @@
 
-CREATE SCHEMA IF NOT EXISTS `testdb` DEFAULT CHARACTER SET utf8 ;
-USE `testdb` ;
+CREATE SCHEMA IF NOT EXISTS `vesseldoc` DEFAULT CHARACTER SET utf8 ;
+USE `vesseldoc` ;
 
 -- -----------------------------------------------------
--- Table `testdb`.`user`
+-- Table `vesseldoc`.`user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`user` (
+CREATE TABLE IF NOT EXISTS `vesseldoc`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(61) NOT NULL,
@@ -19,9 +19,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`form_structure`
+-- Table `vesseldoc`.`form_structure`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`form_structure` (
+CREATE TABLE IF NOT EXISTS `vesseldoc`.`form_structure` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(45) NOT NULL,
   `content` MEDIUMBLOB NOT NULL,
@@ -31,9 +31,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`form`
+-- Table `vesseldoc`.`form`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`form` (
+CREATE TABLE IF NOT EXISTS `vesseldoc`.`form` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
   `form_structure_id` INT NOT NULL,
@@ -43,21 +43,21 @@ CREATE TABLE IF NOT EXISTS `testdb`.`form` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   CONSTRAINT `fk_form_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `testdb`.`user` (`id`)
+    REFERENCES `vesseldoc`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_form_form_structure1`
     FOREIGN KEY (`form_structure_id`)
-    REFERENCES `testdb`.`form_structure` (`id`)
+    REFERENCES `vesseldoc`.`form_structure` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `testdb`.`answer`
+-- Table `vesseldoc`.`answer`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `testdb`.`answer` (
+CREATE TABLE IF NOT EXISTS `vesseldoc`.`answer` (
   `form_id` INT NOT NULL,
   `answer_id` INT NOT NULL,
   `content` VARCHAR(64) NULL,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `testdb`.`answer` (
   PRIMARY KEY (`form_id`, `answer_id`),
   CONSTRAINT `fk_answer_form1`
     FOREIGN KEY (`form_id`)
-    REFERENCES `testdb`.`form` (`id`)
+    REFERENCES `vesseldoc`.`form` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

@@ -71,4 +71,25 @@ ExecStart=/usr/bin/java -jar $APPFILE SuccessExitStatus=143
 [Install]
 WantedBy=multi-user.target" > /etc/systemd/system/vesseldoc-server.service
 
+sudo echo "vesseldoc" > /etc/hostname
+sudo sed -i 's/127.0.1.1.*/127.0.1.1\tvesseldoc/g' /etc/hosts
+sudo hostnamectl set-hostname "vesseldoc"
+
+sudo sed -i 's/\[NOTFOUND=return\] dns/\[NOTFOUND=return\] resolve \[!UNAVAIL=return\] dns/g' /etc/nsswitch.conf
+
+sudo echo "<?xml version=\"1.0\" standalone='no'?><!--*-nxml-*-->
+<service-group>
+
+  <name replace-wildcards=\"yes\">%h</name>
+
+  <service>
+    <type>_http._tcp</type>
+    <port>8080</port>
+  </service>
+
+</service-group>
+" > /etc/avahi/services/vesseldoc-server.service
+
+sudo service avahi-daemon restart
+
 echo 'The installation is finished'

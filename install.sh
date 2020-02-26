@@ -13,7 +13,6 @@ DBNAME='vesseldoc'  # Dont change
 SQLFILE="$(find . -name setupdb.sql | head -n 1)"
 PROPERTIESFILE="./src/main/resources/application.properties"
 
-
 # Update distro
 echo 'Updating system'
 sudo apt-get -y update >> $LOGFILE 2>&1
@@ -56,7 +55,6 @@ sudo chmod 500 $APPFILE
 
 echo 'Making application as service'
 sudo ln -s $APPFILE /etc/init.d/vesseldoc-server
-sudo service vesseldoc-server start
 
 # https://www.baeldung.com/spring-boot-app-as-a-service
 sudo touch /etc/systemd/system/vesseldoc-server.service
@@ -91,5 +89,6 @@ sudo echo "<?xml version=\"1.0\" standalone='no'?><!--*-nxml-*-->
 " > /etc/avahi/services/vesseldoc-server.service
 
 sudo service avahi-daemon restart
+sudo service vesseldoc-server start
 
 echo 'The installation is finished'

@@ -1,7 +1,7 @@
-#VesselDoc-server
+# VesselDoc-server
 This is a local server-application of the VesselDoc app.
 
-##Installation
+## Installation
 
 ```
 sudo apt-get update

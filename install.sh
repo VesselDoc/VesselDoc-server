@@ -5,13 +5,14 @@
 export DEBIAN_FRONTEND=noninteractive
 export LC_ALL=C
 LOGFILE='/var/log/install.log'
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )";
 
 # Variables
 DBUSER='dbuser'
 DBPASSWORD='verysecurepassword'
 DBNAME='vesseldoc'  # Dont change
-SQLFILE="$(find . -name setupdb.sql | head -n 1)"
-PROPERTIESFILE="./src/main/resources/application.properties"
+SQLFILE="$(find $DIR -name setupdb.sql | head -n 1)"
+PROPERTIESFILE="$DIR/src/main/resources/application.properties"
 
 # Update distro
 echo 'Updating system'
@@ -47,10 +48,10 @@ spring.jpa.hibernate.naming.implicit-strategy=org.hibernate.boot.model.naming.Im
 spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl" >> $PROPERTIESFILE
 
 # Build server application
-echo 'Building server application'
+echo 'Building server application (This will take a while)'
 sudo apt-get -y install maven >> $LOGFILE 2>&1
-sudo mvn clean package
-APPFILE="$(find ./target | grep -E .jar$ | head -n 1 | xargs realpath)"
+sudo mvn clean package >> $LOGFILE 2>&1
+APPFILE="$DIR/start.sh"
 sudo chmod 500 $APPFILE
 
 echo 'Making application as service'
@@ -64,7 +65,7 @@ After=syslog.target network.target
 
 [Service]
 User=root
-ExecStart=/usr/bin/java -jar $APPFILE SuccessExitStatus=143
+ExecStart=$DIR/start.sh SuccessExitStatus=143
 
 [Install]
 WantedBy=multi-user.target" > /etc/systemd/system/vesseldoc-server.service
@@ -88,6 +89,7 @@ sudo echo "<?xml version=\"1.0\" standalone='no'?><!--*-nxml-*-->
 </service-group>
 " > /etc/avahi/services/vesseldoc-server.service
 
+sudo systemctl enable vesseldoc-server
 sudo service avahi-daemon restart
 sudo service vesseldoc-server start
 

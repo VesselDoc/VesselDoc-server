@@ -34,9 +34,10 @@ ENGINE = InnoDB;
 -- Table `vesseldoc`.`form`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `vesseldoc`.`form` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` BINARY(16) NOT NULL,
   `user_id` INT(11) NOT NULL,
   `form_structure_id` INT NOT NULL,
+  `creation_date` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_form_user_idx` (`user_id` ASC) ,
   INDEX `fk_form_form_structure1_idx` (`form_structure_id` ASC) ,
@@ -53,19 +54,3 @@ CREATE TABLE IF NOT EXISTS `vesseldoc`.`form` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
--- -----------------------------------------------------
--- Table `vesseldoc`.`answer`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `vesseldoc`.`answer` (
-  `form_id` INT NOT NULL,
-  `answer_id` INT NOT NULL,
-  `content` VARCHAR(64) NULL,
-  INDEX `fk_answer_form1_idx` (`form_id` ASC) ,
-  PRIMARY KEY (`form_id`, `answer_id`),
-  CONSTRAINT `fk_answer_form1`
-    FOREIGN KEY (`form_id`)
-    REFERENCES `vesseldoc`.`form` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;

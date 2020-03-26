@@ -5,6 +5,9 @@ import net.vesseldoc.server.repository.FormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.ByteBuffer;
+import java.util.UUID;
+
 @Service
 public class FormService {
 
@@ -17,7 +20,7 @@ public class FormService {
      * @param structureId Form structure ID
      * @return Form ID of the newly created form
      */
-    public long save(long userId, long structureId){
+    public UUID save(long userId, long structureId){
         Form form = new Form();
         form.setUser_id(userId);
         form.setForm_structure_id(structureId);
@@ -31,7 +34,10 @@ public class FormService {
      * @param userId User ID
      * @return Form ID
      */
-    public long getLatestFormByUser(long userId) {
-        return formRepository.getFormId(userId);
+    public UUID getLatestFormByUser(long userId) {
+        byte[] uuidAsBytes = formRepository.getLatestFormId(userId);
+        ByteBuffer b = ByteBuffer.wrap(uuidAsBytes);
+        UUID uuid = new UUID(b.getLong(), b.getLong());
+        return uuid;
     }
 }

@@ -16,7 +16,10 @@ public interface FormRepository extends JpaRepository<Form, Long> {
      * @param userId User ID
      * @return Form ID of the last created form by given user.
      */
-    @Query(value = "SELECT MAX(id) FROM form WHERE user_id=:userId", nativeQuery = true)
-    long getFormId(long userId);
+    @Query(value = "SELECT id FROM form f1 WHERE f1.user_id=:userId " +
+            "AND f1.creation_date = (" +
+            "SELECT MAX(creation_date) FROM form f2 WHERE f2.user_id = f1.user_id" +
+            ")", nativeQuery = true)
+    byte[] getLatestFormId(long userId);
 
 }

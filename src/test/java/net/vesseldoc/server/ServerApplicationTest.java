@@ -86,7 +86,7 @@ public class ServerApplicationTest {
         token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MSIsImV4cCI6MTU4MTk5NjA0MywiaWF0IjoxNTgxOTc4MDQzfQ.0s0RuFbsiqAzW7kF6ny6hKI5sudw9XhWeAX95Seml54mJ_bYSTWJIgL5Lxl2dphdghtVw9_dusRzIHthfjmilQ";
 
         try {
-            URL url = new URL("http://localhost:" + port + "/newForm");
+            URL url = new URL("http://localhost:" + port + "/newForm?structure_id=1");
 
             String boundary = UUID.randomUUID().toString();
             c = (HttpURLConnection) url.openConnection();
@@ -111,7 +111,7 @@ public class ServerApplicationTest {
                 String response = br.readLine();
                 System.out.println("Response: " + response);
 
-                boolean match = response.matches("^[0-9]+$");
+                boolean match = response.matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
                 Assert.isTrue(match, "Did not return form id.");
             } else {
                 BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream(), StandardCharsets.UTF_8));

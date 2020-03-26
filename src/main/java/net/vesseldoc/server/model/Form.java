@@ -1,6 +1,11 @@
 package net.vesseldoc.server.model;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * This is the Form object.
@@ -10,15 +15,28 @@ import javax.persistence.*;
 @Table(name = "form")
 public class Form {
 
+    /**
+     * https://thoughts-on-java.org/generate-uuids-primary-keys-hibernate/
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @Column(name = "user_id")
     private long user_id;
 
     @Column(name = "form_structure_id")
     private long form_structure_id;
+
+    @CreationTimestamp
+    @Column(name = "creation_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate;
 
     public long getUser_id() {
         return user_id;

@@ -8,6 +8,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +42,7 @@ public class FormController {
         return formService.getAllFormsByUser(userId);
     }
 
-    @GetMapping(value = "/get/{formId:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}")
+    @GetMapping(value = "/form/get/{formId:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}")
     @ResponseBody
     public ResponseEntity<ByteArrayResource> getFormFile(@PathVariable String formId) throws IOException {
         ByteArrayResource file = new ByteArrayResource(fileService.getFile(formId));
@@ -50,4 +51,8 @@ public class FormController {
                 .body(file);
     }
 
+    @PostMapping(value = "/form/set")
+    public void uploadFormFile(@RequestParam("file")MultipartFile file, @RequestParam("id") String formId) throws IOException {
+        fileService.storeFile(file, formId);
+    }
 }

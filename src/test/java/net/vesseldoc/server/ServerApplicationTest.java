@@ -1,7 +1,10 @@
 package net.vesseldoc.server;
 
 import io.jsonwebtoken.lang.Assert;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
@@ -14,14 +17,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ServerApplicationTest {
 
     @LocalServerPort
     private int port;
 
-    private String token;
+    static String token;
 
     @Test
+    @Order(1)
     void testLogin() {
         HttpURLConnection c = null;
 
@@ -60,7 +65,6 @@ public class ServerApplicationTest {
 
                 String[] splitted = response.split("\"");
                 token = splitted[3];
-
                 System.out.println("Token : " + token);
 
                 boolean match = token.matches("^[a-zA-Z0-9._-]+$");
@@ -79,17 +83,17 @@ public class ServerApplicationTest {
     }
 
     @Test
+    @Order(2)
     void testAddNewForm() {
         HttpURLConnection c = null;
-
-        // Try another token!
-        token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MSIsImV4cCI6MTU4MTk5NjA0MywiaWF0IjoxNTgxOTc4MDQzfQ.0s0RuFbsiqAzW7kF6ny6hKI5sudw9XhWeAX95Seml54mJ_bYSTWJIgL5Lxl2dphdghtVw9_dusRzIHthfjmilQ";
 
         try {
             URL url = new URL("http://localhost:" + port + "/newForm?structure_id=1");
 
             String boundary = UUID.randomUUID().toString();
             c = (HttpURLConnection) url.openConnection();
+
+            System.out.println("Adding new form with token: " + token);
 
             c.setDoOutput(true);
             c.setRequestMethod("POST");
@@ -119,6 +123,36 @@ public class ServerApplicationTest {
                 System.out.println("Bad response: " + response);
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c != null) c.disconnect();
+        }
+    }
+
+    @Test
+    @Order(3)
+    void testListUsersForms() {
+        HttpURLConnection c = null;
+
+        try {
+            URL url = new URL("http://localhost:" + port + "/getUsersForms");
+            c = (HttpURLConnection) url.openConnection();
+            c.setRequestMethod("GET");
+            c.setRequestProperty("Authorization", "Bearer " + token);
+
+            if (c.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream(), StandardCharsets.UTF_8));
+                String response = br.readLine();
+                System.out.println("Response: " + response);
+
+                //boolean match = response.matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+                //Assert.isTrue(match, "Did not return form id.");
+            } else {
+                BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream(), StandardCharsets.UTF_8));
+                String response = br.readLine();
+                System.out.println("Bad response: " + response);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

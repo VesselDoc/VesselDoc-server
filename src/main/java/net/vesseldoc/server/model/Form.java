@@ -38,6 +38,14 @@ public class Form {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
+    public UUID getId() {
+        return id;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
     public long getUser_id() {
         return user_id;
     }

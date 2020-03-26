@@ -3,13 +3,12 @@ package net.vesseldoc.server.controller;
 import net.vesseldoc.server.service.FormService;
 import net.vesseldoc.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
+import java.util.List;
 
 @RestController
 public class FormController {
@@ -27,12 +26,14 @@ public class FormController {
      */
     @PostMapping(value = "/newForm")
     public String newForm(@RequestParam("structure_id") long structureId) {
-
-        // These lines gets the User ID for the user that is currently logged in.
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        long userId = userService.getUserDetails(auth.getName()).getId();
-
+        long userId = userService.getCurrentUser();
         return formService.save(userId, structureId).toString();
+    }
+
+    @GetMapping(value = "/getUsersForms")
+    public List<List<Object>> getCurrentUsersForms() {
+        long userId = userService.getCurrentUser();
+        return formService.getAllFormsByUser(userId);
     }
 
 }

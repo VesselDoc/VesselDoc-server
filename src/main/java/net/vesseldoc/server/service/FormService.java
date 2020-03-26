@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.ByteBuffer;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class FormService {
@@ -39,5 +39,23 @@ public class FormService {
         ByteBuffer b = ByteBuffer.wrap(uuidAsBytes);
         UUID uuid = new UUID(b.getLong(), b.getLong());
         return uuid;
+    }
+
+    public List<List<Object>> getAllFormsByUser(long userId) {
+        List<Form> dbContent = formRepository.getAllByUserId(userId);
+        List<List<Object>> readableList = new ArrayList<List<Object>>();
+        Iterator<Form> it = dbContent.iterator();
+        while (it.hasNext()) {
+            Form f = it.next();
+            readableList.add(Arrays.asList(f.getId().toString(),
+                    f.getUser_id(),
+                    f.getForm_structure_id(),
+                    f.getCreationDate().toString()));
+        }
+        return readableList;
+    }
+
+    public Form getForm(String uuid) {
+        return formRepository.getById(UUID.fromString(uuid));
     }
 }

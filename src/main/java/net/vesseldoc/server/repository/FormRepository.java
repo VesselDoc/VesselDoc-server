@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  * FormRepository is used to connect directly with the database about Form related data, if needed.
  */
@@ -22,4 +25,8 @@ public interface FormRepository extends JpaRepository<Form, Long> {
             ")", nativeQuery = true)
     byte[] getLatestFormId(long userId);
 
+    @Query(value = "SELECT * FROM form WHERE user_id=:userId", nativeQuery = true)
+    List<Form> getAllByUserId(long userId);
+
+    Form getById(UUID id);
 }

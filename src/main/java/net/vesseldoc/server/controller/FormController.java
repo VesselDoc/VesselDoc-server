@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 public class FormController {
 
@@ -24,13 +26,13 @@ public class FormController {
      * @return Form ID.
      */
     @PostMapping(value = "/newForm")
-    public long newForm(@RequestParam("structure_id") long structureId) {
+    public String newForm(@RequestParam("structure_id") long structureId) {
 
         // These lines gets the User ID for the user that is currently logged in.
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         long userId = userService.getUserDetails(auth.getName()).getId();
 
-        return formService.save(userId, structureId);
+        return formService.save(userId, structureId).toString();
     }
 
 }

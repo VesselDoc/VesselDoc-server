@@ -47,16 +47,15 @@ public class FormService {
         Iterator<Form> it = dbContent.iterator();
         while (it.hasNext()) {
             Form f = it.next();
-            System.out.println("ID: " + f.getId().toString() +
-                    " User ID: " +  f.getUser_id() +
-                    " Form structure ID: " + f.getForm_structure_id() +
-                    " Date: " + f.getCreationDate().toString());
-
             readableList.add(Arrays.asList(f.getId().toString(),
                     f.getUser_id(),
                     f.getForm_structure_id(),
                     f.getCreationDate().toString()));
         }
         return readableList;
+    }
+
+    public Form getForm(String uuid) {
+        return formRepository.getById(UUID.fromString(uuid));
     }
 }

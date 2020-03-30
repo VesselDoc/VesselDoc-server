@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends CrudRepository<DAOUser, Integer> {
-	
-	DAOUser findByUsername(String username);
-	/*
+
+    DAOUser findByUsername(String username);
+
+    /*
     @Query(value = "SELECT displayName FROM user u WHERE username=:username", nativeQuery = true)
     String findDisplayNameForUser(String username);
 */

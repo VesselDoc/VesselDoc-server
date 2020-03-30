@@ -16,11 +16,12 @@ public class FormService {
 
     /**
      * This creates a new form object, sends the information to the database and returns and ID.
-     * @param userId User ID
+     *
+     * @param userId      User ID
      * @param structureId Form structure ID
      * @return Form ID of the newly created form
      */
-    public UUID save(long userId, long structureId){
+    public UUID save(long userId, long structureId) {
         Form form = new Form();
         form.setUser_id(userId);
         form.setForm_structure_id(structureId);
@@ -31,6 +32,7 @@ public class FormService {
 
     /**
      * Gets the latest created Form ID by the given user.
+     *
      * @param userId User ID
      * @return Form ID
      */

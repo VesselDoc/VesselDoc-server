@@ -15,4 +15,7 @@ public interface FormStructureRepository extends JpaRepository<FormStructure, Lo
 
     @Query(value = "SELECT content FROM form_structure WHERE id=:id", nativeQuery = true)
     byte[] getContentById(long id);
+
+    @Query(value = "SELECT MAX(id) FROM form_structure", nativeQuery = true)
+    long getLast();
 }

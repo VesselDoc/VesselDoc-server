@@ -27,6 +27,7 @@ public class FormController {
 
     /**
      * Creates a new empty form which is attached to a user and a Form structure.
+     *
      * @param structureId ID of the form structure this form is based on.
      * @return Form ID.
      */
@@ -36,7 +37,7 @@ public class FormController {
         return formService.save(userId, structureId).toString();
     }
 
-    @GetMapping(value = "/getUsersForms")
+    @GetMapping(value = "/form/list")
     public List<List<Object>> getCurrentUsersForms() {
         long userId = userService.getCurrentUser();
         return formService.getAllFormsByUser(userId);
@@ -52,7 +53,7 @@ public class FormController {
     }
 
     @PostMapping(value = "/form/set")
-    public void uploadFormFile(@RequestParam("file")MultipartFile file, @RequestParam("id") String formId) throws IOException {
+    public void uploadFormFile(@RequestParam("file") MultipartFile file, @RequestParam("id") String formId) throws IOException {
         fileService.storeFile(file, formId);
     }
 }

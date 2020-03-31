@@ -14,39 +14,40 @@ import java.util.ArrayList;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
-	
-	@Autowired
-	private UserRepository userRepository;
 
-	@Autowired
-	private PasswordEncoder bcryptEncoder;
+    @Autowired
+    private UserRepository userRepository;
 
-	/**
-	 * Loads user by username
-	 *
-	 * @return details of user.
-	 */
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		DAOUser user = userRepository.findByUsername(username);
-		if (user == null) {
-			throw new UsernameNotFoundException("User not found with username: " + username);
-		}
-		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-				new ArrayList<>());
-	}
+    @Autowired
+    private PasswordEncoder bcryptEncoder;
 
-	/**
-	 * Saves the user
-	 * @param user user
-	 * @return user saved
-	 */
-	public DAOUser save(UserDTO user) {
-		DAOUser newUser = new DAOUser();
-		newUser.setUsername(user.getUsername());
-		newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-		//newUser.setDisplayName(user.getDisplayName());
+    /**
+     * Loads user by username
+     *
+     * @return details of user.
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        DAOUser user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                new ArrayList<>());
+    }
 
-		return userRepository.save(newUser);
-	}
+    /**
+     * Saves the user
+     *
+     * @param user user
+     * @return user saved
+     */
+    public DAOUser save(UserDTO user) {
+        DAOUser newUser = new DAOUser();
+        newUser.setUsername(user.getUsername());
+        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+        //newUser.setDisplayName(user.getDisplayName());
+
+        return userRepository.save(newUser);
+    }
 }

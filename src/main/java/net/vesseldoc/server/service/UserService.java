@@ -26,16 +26,19 @@ public class UserService {
     public String getDisplayNameForUser(String username) { return repository.findDisplayNameForUser(username);
     }
 */
+
     /**
      * Get UserDetails for user
      *
      * @return the user details
      */
-    public DAOUser getUserDetails(String username) { return repository.getUserDetails(username);
+    public DAOUser getUserDetails(String username) {
+        return repository.getUserDetails(username);
     }
 
     /**
      * Gets the User ID for the user that is currently logged in.
+     *
      * @return user ID for current user that is logged in.
      */
     public long getCurrentUser() {

@@ -15,13 +15,14 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-/*
-    @GetMapping(value = "/getDisplayName")
-    public String getDisplayName() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return userService.getDisplayNameForUser(auth.getName());
-    }
-*/
+
+    /*
+        @GetMapping(value = "/getDisplayName")
+        public String getDisplayName() {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            return userService.getDisplayNameForUser(auth.getName());
+        }
+    */
     @GetMapping(value = "/getUserDetails")
     public DAOUser getUserDetails() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

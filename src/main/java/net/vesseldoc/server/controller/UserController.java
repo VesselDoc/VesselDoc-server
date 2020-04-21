@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class UserController {
 
@@ -23,10 +25,15 @@ public class UserController {
             return userService.getDisplayNameForUser(auth.getName());
         }
     */
-    @GetMapping(value = "/getUserDetails")
+    @GetMapping(value = "/user/get/details")
     public DAOUser getUserDetails() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userService.getUserDetails(auth.getName());
+    }
+
+    @GetMapping(value = "/user/get/list")
+    public List<DAOUser> getUserList() {
+        return userService.getAllUsers();
     }
 
 }

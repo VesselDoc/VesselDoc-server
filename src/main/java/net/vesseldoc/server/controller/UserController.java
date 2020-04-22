@@ -49,6 +49,9 @@ public class UserController {
         return userService.changePassword(username, currentPassword, newPassword);
     }
 
+    @PostMapping(value = "/user/set/role")
+    public ResponseEntity setUserRole(@RequestParam("username") String username,
+                                      @RequestParam("role") String role) {
+        return userService.changeUserRole(username, role);
+    }
 }
-
-

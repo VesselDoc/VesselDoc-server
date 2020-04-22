@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `vesseldoc`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(61) NOT NULL,
-  `role_id` INT NOT NULL DEFAULT 1,
+  `role_id` INT DEFAULT 1 NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_form_role_idx` (`role_id` ASC) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,

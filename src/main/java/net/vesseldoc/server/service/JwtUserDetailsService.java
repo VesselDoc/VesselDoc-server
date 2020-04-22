@@ -1,7 +1,9 @@
 package net.vesseldoc.server.service;
 
 import net.vesseldoc.server.model.DAOUser;
+import net.vesseldoc.server.model.Role;
 import net.vesseldoc.server.model.UserDTO;
+import net.vesseldoc.server.repository.RoleRepository;
 import net.vesseldoc.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +22,9 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder bcryptEncoder;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     /**
      * Loads user by username
@@ -46,6 +51,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         DAOUser newUser = new DAOUser();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+        newUser.setRoleId(roleRepository.getRoleByName("WORKER").getId());
         //newUser.setDisplayName(user.getDisplayName());
 
         return userRepository.save(newUser);

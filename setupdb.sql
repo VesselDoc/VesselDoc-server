@@ -1,3 +1,4 @@
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 
 CREATE SCHEMA IF NOT EXISTS `vesseldoc` DEFAULT CHARACTER SET utf8 ;
 USE `vesseldoc` ;
@@ -9,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `vesseldoc`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(61) NOT NULL,
-  `role_id` INT NOT NULL DEFAULT 0,
+  `role_id` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   INDEX `fk_form_role_idx` (`role_id` ASC) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
@@ -27,12 +28,16 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `vesseldoc`.`role`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `vesseldoc`.`role` (
-	`id` INT NOT NULL AUTO_INCREMENT,
+	`id` INT NOT NULL,
 	`name` VARCHAR(64) NOT NULL,
 	PRIMARY KEY (`id`),
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
     UNIQUE INDEX `name_UNIQUE` (`name` ASC) )
 ENGINE = InnoDB;
+
+INSERT INTO role(id, name) VALUES ( 0, 'ADMIN');
+INSERT INTO role(id, name) VALUES ( 1, 'WORKER');
+INSERT INTO user(username, password, role_id) VALUES ('admin', '$2y$12$Fu2x/oj7PnQO2iMvDhSbNuU..mzdlHDM3ly4w/BOvZogAIguGqkC.', 0);
 
 -- -----------------------------------------------------
 -- Table `vesseldoc`.`form_structure`

@@ -1,6 +1,7 @@
 package net.vesseldoc.server.service;
 
 import net.vesseldoc.server.model.DAOUser;
+import net.vesseldoc.server.repository.RoleRepository;
 import net.vesseldoc.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.List;
 public class UserService {
 
     private UserRepository repository;
+    private RoleRepository roleRepository;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -74,6 +76,14 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Old password didn't match!");
         }
 
+    }
+
+    public String getUserRole(String username) {
+        return getRoleName(repository.getUserDetails(username).getRoleId());
+    }
+
+    public String getRoleName(long roleId) {
+        return roleRepository.getRoleById(roleId).getName();
     }
 
 }

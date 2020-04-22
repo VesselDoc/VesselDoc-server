@@ -11,11 +11,18 @@ public class DAOUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Column
     private String username;
+
     @Column
     @JsonIgnore
     private String password;
+
+    @Column(name = "role_id")
+    private long roleId;
+
+
     //@Column
     //private String displayName;
 
@@ -48,4 +55,11 @@ public class DAOUser {
         this.password = password;
     }
 
+    public long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(long roleId) {
+        this.roleId = roleId;
+    }
 }

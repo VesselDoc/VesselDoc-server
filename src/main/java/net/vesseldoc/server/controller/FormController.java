@@ -53,7 +53,7 @@ public class FormController {
     }
 
     @PostMapping(value = "/form/set")
-    public void uploadFormFile(@RequestParam("file") MultipartFile file, @RequestParam("id") String formId) throws IOException {
-        fileService.storeFile(file, formId);
+    public ResponseEntity uploadFormFile(@RequestParam("file") MultipartFile file, @RequestParam("id") String formId) throws IOException {
+        return fileService.storeFile(file, formId);
     }
 }

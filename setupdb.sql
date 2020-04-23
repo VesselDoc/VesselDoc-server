@@ -73,6 +73,11 @@ CREATE TABLE IF NOT EXISTS `vesseldoc`.`form` (
     FOREIGN KEY (`form_structure_id`)
     REFERENCES `vesseldoc`.`form_structure` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_form_signed_user`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `vesseldoc`.`user` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 

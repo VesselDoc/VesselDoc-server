@@ -27,6 +27,10 @@ public class FileService {
 
     public void storeFile(MultipartFile file, String uuid) throws IOException {
         String date = new SimpleDateFormat("yyyyMMdd").format(formService.getForm(uuid).getCreationDate());
+        File path = new File(dir + date);
+        if (! path.exists()) {
+            path.mkdir();
+        }
         Files.copy(file.getInputStream(), Paths.get(dir + date + "/" + uuid), StandardCopyOption.REPLACE_EXISTING);
     }
 }

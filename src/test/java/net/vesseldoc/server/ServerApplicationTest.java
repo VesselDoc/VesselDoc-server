@@ -27,6 +27,7 @@ public class ServerApplicationTest {
 
     static String token;
     static String formId;
+    static String structureId;
 
     @Test
     @Order(1)
@@ -81,7 +82,7 @@ public class ServerApplicationTest {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(c != null) c.disconnect();
+            if (c != null) c.disconnect();
         }
     }
 
@@ -129,7 +130,7 @@ public class ServerApplicationTest {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(c != null) c.disconnect();
+            if (c != null) c.disconnect();
         }
     }
 
@@ -159,7 +160,7 @@ public class ServerApplicationTest {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(c != null) c.disconnect();
+            if (c != null) c.disconnect();
         }
     }
 
@@ -174,13 +175,13 @@ public class ServerApplicationTest {
             c.setRequestMethod("GET");
             c.setRequestProperty("Authorization", "Bearer " + token);
             boolean match = c.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR;
-            Assert.isTrue( match,
+            Assert.isTrue(match,
                     "Should have gotten a 403 FORBIDDEN response");
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(c != null) c.disconnect();
+            if (c != null) c.disconnect();
         }
     }
 
@@ -210,16 +211,16 @@ public class ServerApplicationTest {
             request.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"binary\"\r\n");
             request.writeBytes("Content-Type: application/octet-stream\r\n\r\n");
             request.write("Can we pretend that this is a file?".getBytes(UTF_8));
-            request.writeBytes( "\r\n");
+            request.writeBytes("\r\n");
             request.writeBytes("------WebKitFormBoundary" + boundary + "--\r\n");
             request.flush();
             boolean match = c.getResponseCode() == HttpURLConnection.HTTP_OK;
-            Assert.isTrue( match, "Something went wrong with the upload.");
+            Assert.isTrue(match, "Something went wrong with the upload.");
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(c != null) c.disconnect();
+            if (c != null) c.disconnect();
         }
     }
 
@@ -247,7 +248,113 @@ public class ServerApplicationTest {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(c != null) c.disconnect();
+            if (c != null) c.disconnect();
+        }
+    }
+
+    @Test
+    @Order(7)
+    void testUploadStructure() {
+        HttpURLConnection c = null;
+
+        try {
+            URL url = new URL("http://localhost:" + port + "/structure/set");
+            c = (HttpURLConnection) url.openConnection();
+            c.setDoOutput(true);
+            c.setRequestMethod("POST");
+            c.setRequestProperty("Authorization", "Bearer " + token);
+            String boundary = UUID.randomUUID().toString();
+            c.setRequestProperty("Content-Type", "multipart/form-data;charset=UTF-8;boundary=----WebKitFormBoundary" + boundary);
+            DataOutputStream request = new DataOutputStream(c.getOutputStream());
+
+            // Title
+            request.writeBytes("------WebKitFormBoundary" + boundary + "\r\n");
+            request.writeBytes("Content-Disposition: form-data; name=\"title\"\r\n");
+            request.writeBytes("Content-Type: text/plain\r\n\r\n");
+            request.writeBytes("Test structure 1" + "\r\n");
+
+            // File
+            request.writeBytes("------WebKitFormBoundary" + boundary + "\r\n");
+            request.writeBytes("Content-Disposition: form-data; name=\"content\"; filename=\"binary\"\r\n");
+            request.writeBytes("Content-Type: application/octet-stream\r\n\r\n");
+            request.write(("{ \n" +
+                    "'1' : 'Label 1',\n" +
+                    "'2' : 'Label 2' \n" +
+                    "}").getBytes(UTF_8));
+            request.writeBytes("\r\n");
+            request.writeBytes("------WebKitFormBoundary" + boundary + "--\r\n");
+            request.flush();
+
+            boolean match = c.getResponseCode() == HttpURLConnection.HTTP_OK;
+            Assert.isTrue(match,
+                    "Should have gotten a 200 OK response");
+
+            if (c.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(c.getInputStream(), StandardCharsets.UTF_8));
+                String response = bufferedReader.readLine();
+                System.out.println("Response: " + response);
+                structureId = response;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) c.disconnect();
+        }
+    }
+
+    @Test
+    @Order(8)
+    void testGetStructureList() {
+        HttpURLConnection c = null;
+
+        try {
+            URL url = new URL("http://localhost:" + port + "/structure/list");
+            c = (HttpURLConnection) url.openConnection();
+            c.setRequestMethod("GET");
+            c.setRequestProperty("Authorization", "Bearer " + token);
+            boolean match = c.getResponseCode() == HttpURLConnection.HTTP_OK;
+            Assert.isTrue(match,
+                    "Should have gotten a 200 OK response");
+
+            if (c.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(c.getInputStream(), StandardCharsets.UTF_8));
+                String response = bufferedReader.readLine();
+                System.out.println("Response: " + response);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) c.disconnect();
+        }
+    }
+
+    @Test
+    @Order(9)
+    void testGetStructureContent() {
+        HttpURLConnection c = null;
+
+        try {
+            URL url = new URL("http://localhost:" + port + "/structure/get/" + structureId);
+            c = (HttpURLConnection) url.openConnection();
+            c.setRequestMethod("GET");
+            c.setRequestProperty("Authorization", "Bearer " + token);
+            boolean match = c.getResponseCode() == HttpURLConnection.HTTP_OK;
+            Assert.isTrue(match,
+                    "Should have gotten a 200 OK response");
+
+            if (c.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(c.getInputStream(), StandardCharsets.UTF_8));
+                System.out.println("Response: ");
+                while (bufferedReader.ready()) {
+                    System.out.println(bufferedReader.readLine());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) c.disconnect();
         }
     }
 }

@@ -1,6 +1,7 @@
 package net.vesseldoc.server.service;
 
 import net.vesseldoc.server.model.DAOUser;
+import net.vesseldoc.server.repository.RoleRepository;
 import net.vesseldoc.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,11 @@ import java.util.List;
 @Service
 public class UserService {
 
+    @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -76,4 +81,34 @@ public class UserService {
 
     }
 
+    public String getUserRole(String username) {
+        return getRoleName(repository.getUserDetails(username).getRoleId());
+    }
+
+    public String getRoleName(long roleId) {
+        return roleRepository.getRoleById(roleId).getName();
+    }
+
+    public ResponseEntity changeUserRole(String username, String role) {
+        ResponseEntity response;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!getUserRole(auth.getName()).equals("ADMIN")) {
+            response = ResponseEntity.status(HttpStatus.FORBIDDEN).body("You need admin permission to do that!");
+        } else if (auth.getName().equals(username)) {
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot change own role.");
+        } else if (roleRepository.getRoleByName(role) == null) {
+            response = ResponseEntity.status(HttpStatus.CONFLICT).body("Role dont exist!");
+        } else if (repository.findByUsername(username) == null) {
+            response = ResponseEntity.status(HttpStatus.CONFLICT).body("User dont exist!");
+        } else if (repository.findByUsername(username).getRoleId() == roleRepository.getRoleByName(role).getId()) {
+            response = ResponseEntity.status(HttpStatus.CONFLICT).body("User already have that role!");
+        } else {
+            // Do job!
+            DAOUser user = repository.findByUsername(username);
+            user.setRoleId(roleRepository.getRoleByName(role).getId());
+            repository.save(user);
+            response = ResponseEntity.ok("Successfully changed users role!");
+        }
+        return response;
+    }
 }

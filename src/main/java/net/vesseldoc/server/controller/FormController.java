@@ -53,17 +53,17 @@ public class FormController {
     }
 
     @PostMapping(value = "/form/set")
-    public ResponseEntity uploadFormFile(@RequestParam("file") MultipartFile file, @RequestParam("id") String formId) throws IOException {
+    public ResponseEntity<String> uploadFormFile(@RequestParam("file") MultipartFile file, @RequestParam("id") String formId) throws IOException {
         return fileService.storeForm(file, formId);
     }
 
     @PostMapping(value = "/form/set/sign")
-    public ResponseEntity signForm(@RequestParam("form_id") String formId) {
+    public ResponseEntity<String> signForm(@RequestParam("form_id") String formId) {
         return formService.signForm(formId);
     }
 
     @GetMapping(value = "/form/get/signed/{formId:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}")
-    public ResponseEntity getSignedStatus(@PathVariable String formId) {
+    public ResponseEntity<Boolean> getSignedStatus(@PathVariable String formId) {
         return ResponseEntity.ok(formService.isSigned(formId));
     }
 }

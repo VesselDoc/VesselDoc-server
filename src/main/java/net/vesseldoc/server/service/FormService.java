@@ -69,8 +69,8 @@ public class FormService {
         return formRepository.getById(UUID.fromString(uuid));
     }
 
-    public ResponseEntity signForm(String formId) {
-        ResponseEntity response;
+    public ResponseEntity<String> signForm(String formId) {
+        ResponseEntity<String> response;
         Form form = getForm(formId);
 
         if (!userService.getUserRole(userService.getCurrentUser().getUsername()).equals("ADMIN")) {

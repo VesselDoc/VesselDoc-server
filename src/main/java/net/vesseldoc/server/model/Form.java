@@ -38,6 +38,12 @@ public class Form {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
+    @Column(name = "signed")
+    private boolean signed;
+
+    @Column(name = "signed_user_id")
+    private long signedUserId;
+
     public UUID getId() {
         return id;
     }
@@ -60,5 +66,21 @@ public class Form {
 
     public void setForm_structure_id(long form_structure_id) {
         this.form_structure_id = form_structure_id;
+    }
+
+    public boolean isSigned() {
+        return signed;
+    }
+
+    public void setSigned(boolean signed) {
+        this.signed = signed;
+    }
+
+    public long getSignedUserId() {
+        return signedUserId;
+    }
+
+    public void setSignedUserId(long signedUserId) {
+        this.signedUserId = signedUserId;
     }
 }

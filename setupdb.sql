@@ -58,6 +58,8 @@ CREATE TABLE IF NOT EXISTS `vesseldoc`.`form` (
   `user_id` INT(11) NOT NULL,
   `form_structure_id` INT NOT NULL,
   `creation_date` DATETIME NOT NULL,
+  `signed` TINYINT(1) DEFAULT 0 NOT NULL,
+  `signed_user_id` INT(11) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_form_user_idx` (`user_id` ASC) ,
   INDEX `fk_form_form_structure1_idx` (`form_structure_id` ASC) ,
@@ -70,6 +72,11 @@ CREATE TABLE IF NOT EXISTS `vesseldoc`.`form` (
   CONSTRAINT `fk_form_form_structure1`
     FOREIGN KEY (`form_structure_id`)
     REFERENCES `vesseldoc`.`form_structure` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_form_signed_user`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `vesseldoc`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

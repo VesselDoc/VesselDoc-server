@@ -3,6 +3,8 @@ package net.vesseldoc.server.service;
 import net.vesseldoc.server.model.Form;
 import net.vesseldoc.server.repository.FormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.nio.ByteBuffer;
@@ -13,6 +15,9 @@ public class FormService {
 
     @Autowired
     private FormRepository formRepository;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * This creates a new form object, sends the information to the database and returns and ID.
@@ -59,5 +64,22 @@ public class FormService {
 
     public Form getForm(String uuid) {
         return formRepository.getById(UUID.fromString(uuid));
+    }
+
+    public ResponseEntity signForm(String formId) {
+        ResponseEntity response;
+        Form form = getForm(formId);
+
+        if (!userService.getUserRole(userService.getCurrentUser().getUsername()).equals("ADMIN")) {
+            response = ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not permitted to do this!");
+        } else if (form.isSigned()) {
+            response = ResponseEntity.status(HttpStatus.CONFLICT).body("Form is already signed.");
+        } else {
+            form.setSigned(true);
+            form.setSignedUserId(userService.getCurrentUser().getId());
+            formRepository.save(form);
+            response = ResponseEntity.ok("Successfully signed the form!");
+        }
+        return response;
     }
 }

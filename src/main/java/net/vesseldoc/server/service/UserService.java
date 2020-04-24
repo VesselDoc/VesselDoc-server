@@ -55,9 +55,9 @@ public class UserService {
      *
      * @return user ID for current user that is logged in.
      */
-    public long getCurrentUser() {
+    public DAOUser getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return getUserDetails(auth.getName()).getId();
+        return getUserDetails(auth.getName());
     }
 
     public List<DAOUser> getAllUsers() {

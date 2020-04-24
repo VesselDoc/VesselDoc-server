@@ -33,13 +33,13 @@ public class FormController {
      */
     @PostMapping(value = "/newForm")
     public String newForm(@RequestParam("structure_id") long structureId) {
-        long userId = userService.getCurrentUser();
+        long userId = userService.getCurrentUser().getId();
         return formService.save(userId, structureId).toString();
     }
 
     @GetMapping(value = "/form/list")
     public List<List<Object>> getCurrentUsersForms() {
-        long userId = userService.getCurrentUser();
+        long userId = userService.getCurrentUser().getId();
         return formService.getAllFormsByUser(userId);
     }
 
@@ -55,5 +55,10 @@ public class FormController {
     @PostMapping(value = "/form/set")
     public ResponseEntity uploadFormFile(@RequestParam("file") MultipartFile file, @RequestParam("id") String formId) throws IOException {
         return fileService.storeFile(file, formId);
+    }
+
+    @PostMapping(value = "/form/set/sign")
+    public ResponseEntity signForm(@RequestParam("form_id") String formId) {
+        return formService.signForm(formId);
     }
 }

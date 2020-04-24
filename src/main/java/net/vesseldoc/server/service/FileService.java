@@ -20,13 +20,13 @@ public class FileService {
 
     private String dir = "/var/vesseldoc/forms/";
 
-    public byte[] getFile(String uuid) throws IOException {
+    public byte[] getForm(String uuid) throws IOException {
         String date = new SimpleDateFormat("yyyyMMdd").format(formService.getForm(uuid).getCreationDate());
         File file = new File(dir + date + "/" + uuid);
         return Files.readAllBytes(file.toPath());
     }
 
-    public ResponseEntity storeFile(MultipartFile file, String uuid) throws IOException {
+    public ResponseEntity storeForm(MultipartFile file, String uuid) throws IOException {
         String date = new SimpleDateFormat("yyyyMMdd").format(formService.getForm(uuid).getCreationDate());
         File path = new File(dir + date);
         if (! path.exists()) {
@@ -34,5 +34,11 @@ public class FileService {
         }
         Files.copy(file.getInputStream(), Paths.get(dir + date + "/" + uuid), StandardCopyOption.REPLACE_EXISTING);
         return ResponseEntity.ok("Form successfully saved!");
+    }
+
+    public boolean formExists(String uuid) {
+        String date = new SimpleDateFormat("yyyyMMdd").format(formService.getForm(uuid).getCreationDate());
+        File path = new File(dir + date);
+        return path.exists();
     }
 }

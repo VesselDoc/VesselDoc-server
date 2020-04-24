@@ -19,6 +19,9 @@ public class FormService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private FileService fileService;
+
     /**
      * This creates a new form object, sends the information to the database and returns and ID.
      *
@@ -74,6 +77,8 @@ public class FormService {
             response = ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not permitted to do this!");
         } else if (form.isSigned()) {
             response = ResponseEntity.status(HttpStatus.CONFLICT).body("Form is already signed.");
+        } else if (!fileService.formExists(formId)) {
+            response = ResponseEntity.status(HttpStatus.CONFLICT).body("Form is not filled yet.");
         } else {
             form.setSigned(true);
             form.setSignedUserId(userService.getCurrentUser().getId());

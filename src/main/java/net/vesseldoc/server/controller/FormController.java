@@ -46,7 +46,7 @@ public class FormController {
     @GetMapping(value = "/form/get/{formId:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}")
     @ResponseBody
     public ResponseEntity<ByteArrayResource> getFormFile(@PathVariable String formId) throws IOException {
-        ByteArrayResource file = new ByteArrayResource(fileService.getFile(formId));
+        ByteArrayResource file = new ByteArrayResource(fileService.getForm(formId));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; formId=\"" + formId + "\"")
                 .body(file);
@@ -54,7 +54,7 @@ public class FormController {
 
     @PostMapping(value = "/form/set")
     public ResponseEntity uploadFormFile(@RequestParam("file") MultipartFile file, @RequestParam("id") String formId) throws IOException {
-        return fileService.storeFile(file, formId);
+        return fileService.storeForm(file, formId);
     }
 
     @PostMapping(value = "/form/set/sign")

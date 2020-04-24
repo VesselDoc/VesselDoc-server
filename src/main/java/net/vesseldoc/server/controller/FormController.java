@@ -61,4 +61,9 @@ public class FormController {
     public ResponseEntity signForm(@RequestParam("form_id") String formId) {
         return formService.signForm(formId);
     }
+
+    @GetMapping(value = "/form/get/signed/{formId:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}")
+    public ResponseEntity getSignedStatus(@PathVariable String formId) {
+        return ResponseEntity.ok(formService.isSigned(formId));
+    }
 }

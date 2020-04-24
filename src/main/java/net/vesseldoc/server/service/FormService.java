@@ -82,4 +82,8 @@ public class FormService {
         }
         return response;
     }
+
+    public boolean isSigned(String formId) {
+        return getForm(formId).isSigned();
+    }
 }

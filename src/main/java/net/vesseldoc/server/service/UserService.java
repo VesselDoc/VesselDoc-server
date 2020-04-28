@@ -50,6 +50,10 @@ public class UserService {
         return repository.getUserDetails(username);
     }
 
+    public DAOUser getUserDetails(long id) {
+        return repository.getDAOUserById(id);
+    }
+
     /**
      * Gets the User ID for the user that is currently logged in.
      *

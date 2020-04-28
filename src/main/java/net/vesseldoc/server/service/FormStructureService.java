@@ -44,4 +44,8 @@ public class FormStructureService {
 
         return formStructureRepository.save(structure).getId();
     }
+
+    public FormStructure getFormStructure(long id) {
+        return formStructureRepository.getOne(id);
+    }
 }

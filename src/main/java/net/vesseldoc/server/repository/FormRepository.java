@@ -29,5 +29,8 @@ public interface FormRepository extends JpaRepository<Form, Long> {
     @Query(value = "SELECT * FROM form WHERE user_id=:userId", nativeQuery = true)
     List<Form> getAllByUserId(long userId);
 
+    @Query(value = "SELECT * FROM form", nativeQuery = true)
+    List<Form> getAll();
+
     Form getById(UUID id);
 }

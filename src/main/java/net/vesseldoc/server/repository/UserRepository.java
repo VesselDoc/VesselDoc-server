@@ -22,4 +22,6 @@ public interface UserRepository extends CrudRepository<DAOUser, Integer> {
     @Query(value = "SELECT * FROM user;", nativeQuery = true)
     List<DAOUser> getUserList();
 
+    DAOUser getDAOUserById(long userId);
+
 }

@@ -1,5 +1,7 @@
 package net.vesseldoc.server.controller;
 
+import net.vesseldoc.server.model.DAOUser;
+import net.vesseldoc.server.model.Form;
 import net.vesseldoc.server.service.FileService;
 import net.vesseldoc.server.service.FormService;
 import net.vesseldoc.server.service.UserService;
@@ -38,9 +40,23 @@ public class FormController {
     }
 
     @GetMapping(value = "/form/list")
-    public List<List<Object>> getCurrentUsersForms() {
-        long userId = userService.getCurrentUser().getId();
-        return formService.getAllFormsByUser(userId);
+    public ResponseEntity<List<List<Object>>> getFormList() {
+        DAOUser user = userService.getCurrentUser();
+        if (userService.getUserRole(user.getUsername()).equals("ADMIN")) {
+            return formService.getAllForms();
+        } else {
+            return formService.getAllFormsByUser(user.getId());
+        }
+    }
+
+    @GetMapping(value = "/form/list/notsigned")
+    public ResponseEntity<List<List<Object>>> getCurrentUsersForms() {
+        DAOUser user = userService.getCurrentUser();
+        if (userService.getUserRole(user.getUsername()).equals("ADMIN")) {
+            return formService.getAllUnsigned();
+        } else {
+            return formService.getAllUnsignedByUser(user.getId());
+        }
     }
 
     @GetMapping(value = "/form/get/{formId:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}")

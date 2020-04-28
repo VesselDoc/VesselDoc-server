@@ -1,6 +1,7 @@
 package net.vesseldoc.server.service;
 
 import net.vesseldoc.server.model.Form;
+import net.vesseldoc.server.model.FormStructure;
 import net.vesseldoc.server.repository.FormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,9 @@ public class FormService {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private FormStructureService formStructureService;
 
     /**
      * This creates a new form object, sends the information to the database and returns and ID.
@@ -51,18 +55,62 @@ public class FormService {
         return uuid;
     }
 
-    public List<List<Object>> getAllFormsByUser(long userId) {
-        List<Form> dbContent = formRepository.getAllByUserId(userId);
-        List<List<Object>> readableList = new ArrayList<List<Object>>();
+
+    public ResponseEntity<List<List<Object>>> getAllForms() {
+        List<Form> dbContent = formRepository.getAll();
+        List<List<Object>> list = new ArrayList<List<Object>>();
         Iterator<Form> it = dbContent.iterator();
         while (it.hasNext()) {
-            Form f = it.next();
-            readableList.add(Arrays.asList(f.getId().toString(),
-                    f.getUser_id(),
-                    f.getForm_structure_id(),
-                    f.getCreationDate().toString()));
+            Form fs = it.next();
+            String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
+            String structureOwner = userService.getUserDetails(fs.getUser_id()).getUsername();
+            list.add(Arrays.asList( structureName, structureOwner, fs));
         }
-        return readableList;
+        return ResponseEntity.ok(list);
+    }
+
+    public ResponseEntity<List<List<Object>>> getAllUnsigned() {
+        List<Form> dbContent = formRepository.getAll();
+        List<List<Object>> list = new ArrayList<List<Object>>();
+        Iterator<Form> it = dbContent.iterator();
+        while (it.hasNext()) {
+            Form fs = it.next();
+            if (!fs.isSigned()) {
+                String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
+                String structureOwner = userService.getUserDetails(fs.getUser_id()).getUsername();
+                list.add(Arrays.asList( structureName, structureOwner, fs));
+            }
+        }
+        return ResponseEntity.ok(list);
+    }
+
+    public ResponseEntity<List<List<Object>>> getAllFormsByUser(long userId) {
+        List<Form> dbContent = formRepository.getAllByUserId(userId);
+        List<List<Object>> list = new ArrayList<List<Object>>();
+        Iterator<Form> it = dbContent.iterator();
+        while (it.hasNext()) {
+            Form fs = it.next();
+            String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
+            String structureOwner = userService.getUserDetails(fs.getUser_id()).getUsername();
+            list.add(Arrays.asList( structureName, structureOwner, fs));
+        }
+        return ResponseEntity.ok(list);
+
+    }
+
+    public ResponseEntity<List<List<Object>>> getAllUnsignedByUser(long userId) {
+        List<Form> dbContent = formRepository.getAllByUserId(userId);
+        List<List<Object>> list = new ArrayList<List<Object>>();
+        Iterator<Form> it = dbContent.iterator();
+        while (it.hasNext()) {
+            Form fs = it.next();
+            if (!fs.isSigned()) {
+                String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
+                String structureOwner = userService.getUserDetails(fs.getUser_id()).getUsername();
+                list.add(Arrays.asList( structureName, structureOwner, fs));
+            }
+        }
+        return ResponseEntity.ok(list);
     }
 
     public Form getForm(String uuid) {

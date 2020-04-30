@@ -36,6 +36,8 @@ public class JwtUserDetailsService implements UserDetailsService {
         DAOUser user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
+        } else if (!user.isActive()) {
+            throw new UsernameNotFoundException("User with username " + username + " is deactivated.");
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 new ArrayList<>());
@@ -52,7 +54,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         newUser.setUsername(user.getUsername());
         newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
         newUser.setRoleId(roleRepository.getRoleByName("WORKER").getId());
-        //newUser.setDisplayName(user.getDisplayName());
+        newUser.setActive(true);
 
         return userRepository.save(newUser);
     }

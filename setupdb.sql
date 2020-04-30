@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `vesseldoc`.`user` (
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(61) NOT NULL,
   `role_id` INT DEFAULT 1 NOT NULL,
+  `active` TINYINT(1) DEFAULT 1 NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_form_role_idx` (`role_id` ASC) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
@@ -37,7 +38,7 @@ ENGINE = InnoDB;
 
 INSERT INTO role(id, name) VALUES ( 0, 'ADMIN');
 INSERT INTO role(id, name) VALUES ( 1, 'WORKER');
-INSERT INTO user(username, password, role_id) VALUES ('admin', '$2y$12$Fu2x/oj7PnQO2iMvDhSbNuU..mzdlHDM3ly4w/BOvZogAIguGqkC.', 0);
+INSERT INTO user(username, password, role_id, active) VALUES ('admin', '$2y$12$Fu2x/oj7PnQO2iMvDhSbNuU..mzdlHDM3ly4w/BOvZogAIguGqkC.', 0, 1);
 
 -- -----------------------------------------------------
 -- Table `vesseldoc`.`form_structure`

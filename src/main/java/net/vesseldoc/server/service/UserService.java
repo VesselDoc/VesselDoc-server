@@ -64,6 +64,18 @@ public class UserService {
         return getUserDetails(auth.getName());
     }
 
+    public boolean currentUserHasHighAuthority() {
+        DAOUser user = getCurrentUser();
+
+        if (getUserRole(user.getUsername()).equals("ADMIN")) {
+            return true;
+        } else if (getUserRole(user.getUsername()).equals("CAPTAIN")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public List<DAOUser> getAllUsers() {
         return repository.getUserList();
     }
@@ -93,10 +105,10 @@ public class UserService {
         return roleRepository.getRoleById(roleId).getName();
     }
 
-    public ResponseEntity changeUserRole(String username, String role) {
-        ResponseEntity response;
+    public ResponseEntity<String> changeUserRole(String username, String role) {
+        ResponseEntity<String> response;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!getUserRole(auth.getName()).equals("ADMIN")) {
+        if (!currentUserHasHighAuthority()) {
             response = ResponseEntity.status(HttpStatus.FORBIDDEN).body("You need admin permission to do that!");
         } else if (auth.getName().equals(username)) {
             response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot change own role.");
@@ -107,12 +119,24 @@ public class UserService {
         } else if (repository.findByUsername(username).getRoleId() == roleRepository.getRoleByName(role).getId()) {
             response = ResponseEntity.status(HttpStatus.CONFLICT).body("User already have that role!");
         } else {
-            // Do job!
             DAOUser user = repository.findByUsername(username);
             user.setRoleId(roleRepository.getRoleByName(role).getId());
             repository.save(user);
             response = ResponseEntity.ok("Successfully changed users role!");
         }
         return response;
+    }
+
+    public ResponseEntity<String> deactivateUser(String username) {
+        if (!currentUserHasHighAuthority()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Current user is not allowed to do that.");
+        } else if (getUserDetails(username) == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Given user does not exist.");
+        } else {
+            DAOUser user = getUserDetails(username);
+            user.setActive(false);
+            repository.save(user);
+            return ResponseEntity.ok("Successfully deactivated user.");
+        }
     }
 }

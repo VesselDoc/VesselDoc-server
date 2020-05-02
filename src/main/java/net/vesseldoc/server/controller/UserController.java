@@ -54,4 +54,9 @@ public class UserController {
                                       @RequestParam("role") String role) {
         return userService.changeUserRole(username, role);
     }
+
+    @PostMapping(value = "/user/set/deactivate")
+    public ResponseEntity deactivateUser(@RequestParam("username") String username) {
+        return userService.deactivateUser(username);
+    }
 }

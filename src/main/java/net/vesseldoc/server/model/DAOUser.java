@@ -22,6 +22,7 @@ public class DAOUser {
     @Column(name = "role_id")
     private long roleId;
 
+    private boolean active;
 
     //@Column
     //private String displayName;
@@ -61,5 +62,13 @@ public class DAOUser {
 
     public void setRoleId(long roleId) {
         this.roleId = roleId;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

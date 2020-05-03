@@ -28,6 +28,13 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+    /**
+     * Request to log in and return a bearer token.
+     *
+     * @param authenticationRequest JwtRequest, which requires a username and a password.
+     * @return Response with bearer token.
+     * @throws Exception if username and password dont match.
+     */
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
@@ -41,6 +48,13 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
+    /**
+     * Request to register new user.
+     *
+     * @param user UserDTO, which requires a username and a password.
+     * @return Response with user information if it was successful.
+     * @throws Exception if user already exist or if username or password is empty.
+     */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
         if (user.getUsername() == "" || user.getPassword() == "") {
@@ -49,6 +63,14 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok(userDetailsService.save(user));
     }
 
+    /**
+     * Authenticates with an authentication manager that have a set of checks.
+     * If one of these checks is triggered, then it returns a exception instead.
+     *
+     * @param username username.
+     * @param password password.
+     * @throws Exception if one of the checks is triggered.
+     */
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

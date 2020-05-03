@@ -46,14 +46,14 @@ public class UserController {
      * If no username is specified then the possword to the current logged in user is going to be changed.
      *
      * @param currentPassword current password.
-     * @param newPassword new password.
-     * @param username username.
+     * @param newPassword     new password.
+     * @param username        username.
      * @return Response to tell if the password change was successful.
      */
     @PostMapping(value = "/user/set/password")
     public ResponseEntity<String> changePassword(@RequestParam("current_password") String currentPassword,
-                                         @RequestParam("new_password") String newPassword,
-                                         @RequestParam(value = "username", required = false) String username) {
+                                                 @RequestParam("new_password") String newPassword,
+                                                 @RequestParam(value = "username", required = false) String username) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (username == null || username.equals("")) {
             username = auth.getName();
@@ -67,12 +67,12 @@ public class UserController {
      * Can only be done by a user with high authority.
      *
      * @param username username.
-     * @param role role as string eg. 'ADMIN' or 'WORKER'.
+     * @param role     role as string eg. 'ADMIN' or 'WORKER'.
      * @return Response to tell iw the change was successful.
      */
     @PostMapping(value = "/user/set/role")
     public ResponseEntity<String> setUserRole(@RequestParam("username") String username,
-                                      @RequestParam("role") String role) {
+                                              @RequestParam("role") String role) {
         return userService.changeUserRole(username, role);
     }
 

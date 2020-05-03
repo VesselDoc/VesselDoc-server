@@ -69,7 +69,7 @@ public class FormService {
             String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
             String formOwnerUsername = userService.getUserDetails(fs.getUser_id()).getUsername();
             String signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
-            list.add(Arrays.asList( structureName, formOwnerUsername, signedUsername, fs));
+            list.add(Arrays.asList(structureName, formOwnerUsername, signedUsername, fs));
         }
         return ResponseEntity.ok(list);
     }
@@ -89,7 +89,7 @@ public class FormService {
                 String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
                 String formOwnerUsername = userService.getUserDetails(fs.getUser_id()).getUsername();
                 String signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
-                list.add(Arrays.asList( structureName, formOwnerUsername, signedUsername, fs));
+                list.add(Arrays.asList(structureName, formOwnerUsername, signedUsername, fs));
             }
         }
         return ResponseEntity.ok(list);
@@ -110,7 +110,7 @@ public class FormService {
             String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
             String formOwnerUsername = userService.getUserDetails(fs.getUser_id()).getUsername();
             String signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
-            list.add(Arrays.asList( structureName, formOwnerUsername, signedUsername, fs));
+            list.add(Arrays.asList(structureName, formOwnerUsername, signedUsername, fs));
         }
         return ResponseEntity.ok(list);
 
@@ -131,7 +131,7 @@ public class FormService {
             if (!fs.isSigned()) {
                 String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
                 String structureOwner = userService.getUserDetails(fs.getUser_id()).getUsername();
-                list.add(Arrays.asList( structureName, structureOwner, fs));
+                list.add(Arrays.asList(structureName, structureOwner, fs));
             }
         }
         return ResponseEntity.ok(list);

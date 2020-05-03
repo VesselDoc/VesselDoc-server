@@ -40,7 +40,7 @@ public class FormStructureController {
      * Can only be done by a user with high authority.
      *
      * @param title form structure title.
-     * @param file form structure content as multipartfile.
+     * @param file  form structure content as multipartfile.
      * @return Form structure id.
      * @throws IOException if data couldn't be stored.
      */

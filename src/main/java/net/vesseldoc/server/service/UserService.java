@@ -84,12 +84,12 @@ public class UserService {
     /**
      * Changes password for specified user if old password matches.
      *
-     * @param username username of the user that sre having it's password changed.
+     * @param username    username of the user that sre having it's password changed.
      * @param oldPassword existing password
      * @param newPassword new password.
      * @return response to tell if it was successfull or not.
      */
-    public ResponseEntity<String> changePassword(String username , String oldPassword, String newPassword) {
+    public ResponseEntity<String> changePassword(String username, String oldPassword, String newPassword) {
         DAOUser user = repository.getUserDetails(username);
 
         if (!currentUserHasHighAuthority() || !getCurrentUser().getUsername().equals(username)) {
@@ -126,7 +126,7 @@ public class UserService {
      * An user cannot change its own role.
      *
      * @param username username.
-     * @param role new role.
+     * @param role     new role.
      * @return Response to tell if the change was successful.
      */
     public ResponseEntity<String> changeUserRole(String username, String role) {

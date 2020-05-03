@@ -48,7 +48,7 @@ public class FormStructureService {
      * Saves a form structure and returns its id.
      *
      * @param title form structure title.
-     * @param file form structure content as multipartfile.
+     * @param file  form structure content as multipartfile.
      * @return form structure id.
      * @throws IOException if file cant be saved.
      */

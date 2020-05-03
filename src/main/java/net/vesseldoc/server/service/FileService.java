@@ -49,7 +49,7 @@ public class FileService {
         } else {
             String date = new SimpleDateFormat("yyyyMMdd").format(formService.getForm(uuid).getCreationDate());
             File path = new File(dir + date);
-            if (! path.exists()) {
+            if (!path.exists()) {
                 path.mkdirs();
             }
             Files.copy(file.getInputStream(), Paths.get(dir + date + "/" + uuid), StandardCopyOption.REPLACE_EXISTING);

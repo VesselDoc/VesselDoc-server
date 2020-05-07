@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+/**
+ * DAOUser is the user object. It is attached to the user table in the database and can be used for authentication.
+ */
 @Entity
 @Table(name = "user")
 public class DAOUser {
@@ -22,6 +25,11 @@ public class DAOUser {
     @Column(name = "role_id")
     private long roleId;
 
+    /**
+     * This tells if the user is deleted or not.
+     * This is done instead of actually deleting a user
+     * because it wont mess with other database objects that has user as foreign key.
+     */
     private boolean active;
 
     public long getId() {

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * FormRepository is used to connect directly with the database about Form related data, if needed.
+ * FormRepository is used to connect directly with the database about Form related data.
  */
 @Repository
 public interface FormRepository extends JpaRepository<Form, Long> {

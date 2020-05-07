@@ -1,7 +1,6 @@
 package net.vesseldoc.server.service;
 
 import net.vesseldoc.server.model.DAOUser;
-import net.vesseldoc.server.model.Role;
 import net.vesseldoc.server.model.UserDTO;
 import net.vesseldoc.server.repository.RoleRepository;
 import net.vesseldoc.server.repository.UserRepository;

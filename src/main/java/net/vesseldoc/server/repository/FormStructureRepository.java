@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository to get form structure related information from database.
+ */
 @Repository
 public interface FormStructureRepository extends JpaRepository<FormStructure, Long> {
 

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository to get user related information from database.
+ */
 @Repository
 public interface UserRepository extends CrudRepository<DAOUser, Integer> {
 

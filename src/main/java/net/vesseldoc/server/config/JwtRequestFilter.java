@@ -16,6 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * https://www.javainuse.com/spring/boot-jwt-mysql?fbclid=IwAR39k1k453l37iExXzKY7ugOJJpSZf8gs-cPhJaDG87F6GnpKeepHlLQCI0
+ *
+ * Gets jwt token and specifies to spring that the user is authenticated.
+ */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 

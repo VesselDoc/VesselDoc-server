@@ -15,6 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * https://www.javainuse.com/spring/boot-jwt-mysql?fbclid=IwAR39k1k453l37iExXzKY7ugOJJpSZf8gs-cPhJaDG87F6GnpKeepHlLQCI0
+ *
+ * Configuration class that matches requests with the given authentication token end decides if the user has access.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

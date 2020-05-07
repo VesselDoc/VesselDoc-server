@@ -31,20 +31,11 @@ public class UserService {
         this.repository = repository;
     }
 
-    /*
-    /**
-     * Get displayName for user
-     *
-     * @return the display name
-     *
-    public String getDisplayNameForUser(String username) { return repository.findDisplayNameForUser(username);
-    }
-*/
 
     /**
-     * Get UserDetails for user
+     * Get User object from database.
      *
-     * @return the user details
+     * @return user object.
      */
     public DAOUser getUserDetails(String username) {
         return repository.getUserDetails(username);
@@ -64,6 +55,11 @@ public class UserService {
         return getUserDetails(auth.getName());
     }
 
+    /**
+     * Checks if the user who is currently logged in has a role that has high authority.
+     *
+     * @return true if user is high authority.
+     */
     public boolean currentUserHasHighAuthority() {
         DAOUser user = getCurrentUser();
 
@@ -76,27 +72,46 @@ public class UserService {
         }
     }
 
+    /**
+     * Lists all users in the database.
+     *
+     * @return all users.
+     */
     public List<DAOUser> getAllUsers() {
         return repository.getUserList();
     }
 
-    public ResponseEntity<String> changePassword(String username , String oldPassword, String newPassword) {
+    /**
+     * Changes password for specified user if old password matches.
+     *
+     * @param username    username of the user that sre having it's password changed.
+     * @param oldPassword existing password
+     * @param newPassword new password.
+     * @return response to tell if it was successfull or not.
+     */
+    public ResponseEntity<String> changePassword(String username, String oldPassword, String newPassword) {
         DAOUser user = repository.getUserDetails(username);
 
-        if (BCrypt.checkpw(oldPassword, user.getPassword())) {
-            if (!newPassword.equals(oldPassword)) {
-                user.setPassword(encoder.encode(newPassword));
-                repository.save(user);
-                return ResponseEntity.ok("Successfully changed password!");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't change to the same password.");
-            }
-        } else {
+        if (!currentUserHasHighAuthority() || !getCurrentUser().getUsername().equals(username)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You dont have permission to change this users password!");
+        } else if (!BCrypt.checkpw(oldPassword, user.getPassword()) && !currentUserHasHighAuthority()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Old password didn't match!");
+        } else if (newPassword.equals(oldPassword)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't change to the same password.");
+        } else {
+            user.setPassword(encoder.encode(newPassword));
+            repository.save(user);
+            return ResponseEntity.ok("Successfully changed password!");
         }
 
     }
 
+    /**
+     * Gets rolename of given user.
+     *
+     * @param username username.
+     * @return name of role.
+     */
     public String getUserRole(String username) {
         return getRoleName(repository.getUserDetails(username).getRoleId());
     }
@@ -105,6 +120,15 @@ public class UserService {
         return roleRepository.getRoleById(roleId).getName();
     }
 
+    /**
+     * Changes role of given user.
+     * Can only be changed by an user with high authority.
+     * An user cannot change its own role.
+     *
+     * @param username username.
+     * @param role     new role.
+     * @return Response to tell if the change was successful.
+     */
     public ResponseEntity<String> changeUserRole(String username, String role) {
         ResponseEntity<String> response;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -127,6 +151,13 @@ public class UserService {
         return response;
     }
 
+    /**
+     * Deactivates given user.
+     * Can only be done by an user with high authority.
+     *
+     * @param username username.
+     * @return Response to tell if the deactivation was successful.
+     */
     public ResponseEntity<String> deactivateUser(String username) {
         if (!currentUserHasHighAuthority()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Current user is not allowed to do that.");

@@ -1,7 +1,6 @@
 package net.vesseldoc.server.service;
 
 import net.vesseldoc.server.model.Form;
-import net.vesseldoc.server.model.FormStructure;
 import net.vesseldoc.server.repository.FormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,6 +55,11 @@ public class FormService {
     }
 
 
+    /**
+     * Gets a list of all forms including structure title, form creator and name of user who signed it.
+     *
+     * @return form list.
+     */
     public ResponseEntity<List<List<Object>>> getAllForms() {
         List<Form> dbContent = formRepository.getAll();
         List<List<Object>> list = new ArrayList<List<Object>>();
@@ -63,12 +67,18 @@ public class FormService {
         while (it.hasNext()) {
             Form fs = it.next();
             String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
-            String structureOwner = userService.getUserDetails(fs.getUser_id()).getUsername();
-            list.add(Arrays.asList( structureName, structureOwner, fs));
+            String formOwnerUsername = userService.getUserDetails(fs.getUser_id()).getUsername();
+            String signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
+            list.add(Arrays.asList(structureName, formOwnerUsername, signedUsername, fs));
         }
         return ResponseEntity.ok(list);
     }
 
+    /**
+     * Gets a list of all unsigned forms.
+     *
+     * @return list of unsigned forms.
+     */
     public ResponseEntity<List<List<Object>>> getAllUnsigned() {
         List<Form> dbContent = formRepository.getAll();
         List<List<Object>> list = new ArrayList<List<Object>>();
@@ -77,13 +87,20 @@ public class FormService {
             Form fs = it.next();
             if (!fs.isSigned()) {
                 String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
-                String structureOwner = userService.getUserDetails(fs.getUser_id()).getUsername();
-                list.add(Arrays.asList( structureName, structureOwner, fs));
+                String formOwnerUsername = userService.getUserDetails(fs.getUser_id()).getUsername();
+                String signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
+                list.add(Arrays.asList(structureName, formOwnerUsername, signedUsername, fs));
             }
         }
         return ResponseEntity.ok(list);
     }
 
+    /**
+     * Gets a list of forms by a specified user.
+     *
+     * @param userId user id.
+     * @return lsit of forms.
+     */
     public ResponseEntity<List<List<Object>>> getAllFormsByUser(long userId) {
         List<Form> dbContent = formRepository.getAllByUserId(userId);
         List<List<Object>> list = new ArrayList<List<Object>>();
@@ -91,13 +108,20 @@ public class FormService {
         while (it.hasNext()) {
             Form fs = it.next();
             String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
-            String structureOwner = userService.getUserDetails(fs.getUser_id()).getUsername();
-            list.add(Arrays.asList( structureName, structureOwner, fs));
+            String formOwnerUsername = userService.getUserDetails(fs.getUser_id()).getUsername();
+            String signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
+            list.add(Arrays.asList(structureName, formOwnerUsername, signedUsername, fs));
         }
         return ResponseEntity.ok(list);
 
     }
 
+    /**
+     * Gets a list of unsigned for by a specified user.
+     *
+     * @param userId user id.
+     * @return list of forms.
+     */
     public ResponseEntity<List<List<Object>>> getAllUnsignedByUser(long userId) {
         List<Form> dbContent = formRepository.getAllByUserId(userId);
         List<List<Object>> list = new ArrayList<List<Object>>();
@@ -107,16 +131,29 @@ public class FormService {
             if (!fs.isSigned()) {
                 String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
                 String structureOwner = userService.getUserDetails(fs.getUser_id()).getUsername();
-                list.add(Arrays.asList( structureName, structureOwner, fs));
+                list.add(Arrays.asList(structureName, structureOwner, fs));
             }
         }
         return ResponseEntity.ok(list);
     }
 
+    /**
+     * Gets a form object by a specified form id.
+     *
+     * @param uuid form id.
+     * @return form object.
+     */
     public Form getForm(String uuid) {
         return formRepository.getById(UUID.fromString(uuid));
     }
 
+    /**
+     * Signs a form.
+     * Current user needs high authority to sign.
+     *
+     * @param formId form id.
+     * @return Response to tell if the form was successfully signed or not.
+     */
     public ResponseEntity<String> signForm(String formId) {
         ResponseEntity<String> response;
         Form form = getForm(formId);
@@ -136,6 +173,12 @@ public class FormService {
         return response;
     }
 
+    /**
+     * Checks if a form is signed.
+     *
+     * @param formId form id.
+     * @return true if signed, false if not signed.
+     */
     public boolean isSigned(String formId) {
         return getForm(formId).isSigned();
     }

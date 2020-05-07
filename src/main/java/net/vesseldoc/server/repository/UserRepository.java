@@ -12,10 +12,6 @@ public interface UserRepository extends CrudRepository<DAOUser, Integer> {
 
     DAOUser findByUsername(String username);
 
-    /*
-    @Query(value = "SELECT displayName FROM user u WHERE username=:username", nativeQuery = true)
-    String findDisplayNameForUser(String username);
-*/
     @Query(value = "SELECT * FROM user u WHERE username=:username AND active=1", nativeQuery = true)
     DAOUser getUserDetails(String username);
 

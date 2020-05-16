@@ -13,6 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * https://www.javainuse.com/spring/boot-jwt-mysql?fbclid=IwAR39k1k453l37iExXzKY7ugOJJpSZf8gs-cPhJaDG87F6GnpKeepHlLQCI0
+ *
+ * Holds methods to serve info and generating jwt tokens.
+ */
 @Component
 public class JwtTokenUtil implements Serializable {
 

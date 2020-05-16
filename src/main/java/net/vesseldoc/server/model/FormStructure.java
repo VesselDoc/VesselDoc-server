@@ -1,7 +1,6 @@
 package net.vesseldoc.server.model;
 
 import javax.persistence.*;
-import java.sql.Blob;
 
 @Entity
 @Table(name = "form_structure")

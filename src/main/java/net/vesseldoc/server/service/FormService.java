@@ -68,7 +68,12 @@ public class FormService {
             Form fs = it.next();
             String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
             String formOwnerUsername = userService.getUserDetails(fs.getUser_id()).getUsername();
-            String signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
+            String signedUsername;
+            try {
+                signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
+            } catch (NullPointerException e) {
+                signedUsername = "Not signed";
+            }
             list.add(Arrays.asList(structureName, formOwnerUsername, signedUsername, fs));
         }
         return ResponseEntity.ok(list);
@@ -88,7 +93,12 @@ public class FormService {
             if (!fs.isSigned()) {
                 String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
                 String formOwnerUsername = userService.getUserDetails(fs.getUser_id()).getUsername();
-                String signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
+                String signedUsername;
+                try {
+                signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
+            } catch (NullPointerException e) {
+                signedUsername = "Not signed";
+            }
                 list.add(Arrays.asList(structureName, formOwnerUsername, signedUsername, fs));
             }
         }
@@ -109,7 +119,12 @@ public class FormService {
             Form fs = it.next();
             String structureName = formStructureService.getFormStructure(fs.getForm_structure_id()).getTitle();
             String formOwnerUsername = userService.getUserDetails(fs.getUser_id()).getUsername();
-            String signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
+            String signedUsername;
+            try {
+                signedUsername = userService.getUserDetails(fs.getSignedUserId()).getUsername();
+            } catch (NullPointerException e) {
+                signedUsername = "Not signed";
+            }
             list.add(Arrays.asList(structureName, formOwnerUsername, signedUsername, fs));
         }
         return ResponseEntity.ok(list);
